@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+// import React, { useState, useEffect } from "react";
+// import { useNavigate } from "react-router-dom";
+// import axios from "axios";
 // const products = [
 //     {
 //         id: 1,
@@ -46,8 +46,17 @@ import axios from "axios";
 //     },
 // ];
 
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+
 const ProductCategory = () => {
     const [products, setProducts] = useState([]);
+    const [cart, setCart] = useState([]);
+    const [showPopup, setShowPopup] = useState(false);
+    const [totalqt, setTotalqt] = useState(0);
+    const [totalamt, setTotalamt] = useState(0);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -64,10 +73,24 @@ const ProductCategory = () => {
         fetchProducts();
     }, []);
 
-    const [cart, setCart] = useState([]);
-    const navigate = useNavigate();
+    useEffect(() => {
+        // Function to be executed immediately after cart changes
+        const updateCart = () => {
+            calculateTotal();
+            calculateTotalQuantity();
+            console.log("Cart updated");
+        };
 
-    console.log(cart);
+        // Call the update function
+        updateCart();
+        if (totalqt >= 2) {
+            setShowPopup(true);
+        }
+        if (totalqt < 2) {
+            setShowPopup(false);
+        }
+    }, [cart, totalqt]); // Specify cart as a dependency
+
     const addToCart = (product) => {
         setCart([...cart, { ...product, quantity: 1 }]);
     };
@@ -96,13 +119,35 @@ const ProductCategory = () => {
         const item = cart.find((item) => item._id === product._id);
         return item ? item.quantity : 0;
     };
+
+    const calculateTotal = () => {
+        setTotalamt(
+            cart.reduce((total, item) => total + item.price * item.quantity, 0)
+        );
+    };
+    console.log(totalqt);
+    console.log(showPopup);
+    const calculateTotalQuantity = () => {
+        setTotalqt(cart.reduce((total, item) => total + item.quantity, 0));
+    };
+
     const viewCart = () => {
         navigate("/cart", { state: { cart } });
     };
 
     return (
         <div className="p-4">
-            <h1 className="text-2xl font-bold mb-4">Product Category</h1>
+            <Link to="/">
+                <img
+                    src="/assets/img/logo.jpeg"
+                    alt="company logo"
+                    className="md:h-28 m-auto"
+                    href=""
+                />
+            </Link>
+            <h1 className="text-xl text-center font-bold mb-4 mt-2">
+                India's #1 Premium Flavoured Chai
+            </h1>
             <div className="mb-4">
                 <input
                     type="text"
@@ -110,6 +155,17 @@ const ProductCategory = () => {
                     className="w-full p-2 border border-gray-300 rounded"
                 />
             </div>
+            {showPopup == true && (
+                <div className="free-sample-message">
+                    <p
+                        type="text"
+                        value="Congratulations! You are getting a free sample"
+                        readOnly
+                    >
+                        Congratulations! You are getting a free sample"
+                    </p>
+                </div>
+            )}
             <div className="pb-16">
                 {products.map((product) => (
                     <div
@@ -167,8 +223,8 @@ const ProductCategory = () => {
                 ))}
             </div>
             <div
-                className="fixed bottom-0 left-0  w-full bg-[#19382B] text-white p-4 flex justify-between items-center"
-                onClick={viewCart}
+                className="fixed bottom-0 left-0 w-full bg-[#19382B] text-white p-4 flex justify-between items-center"
+                onClick={totalqt > 0 ? viewCart : null}
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -192,8 +248,13 @@ const ProductCategory = () => {
                 >
                     CART
                 </div>
-                <div className="bg-white text-green-500 px-4 py-2 rounded-full">
-                    {cart.length}
+                <div className="flex items-center">
+                    <div className="bg-white text-green-500 px-4 py-2 rounded-full mr-4">
+                        ₹{totalamt}
+                    </div>
+                    <div className="bg-white text-green-500 px-4 py-2 rounded-full">
+                        {totalqt}
+                    </div>
                 </div>
             </div>
         </div>

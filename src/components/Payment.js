@@ -6,6 +6,7 @@ const Payment = () => {
     const navigate = useNavigate();
     const cart = location.state.cart;
     const total = location.state.total;
+    const [errors, setErrors] = useState({});
     const [address, setAddress] = useState({
         name: "",
         email: "",
@@ -15,55 +16,85 @@ const Payment = () => {
         state: "",
         zip: "",
     });
+    const [paymentMethod, setPaymentMethod] = useState("");
+    const [finalAmount, setFinalAmount] = useState(total);
 
     const handleChange = (e) => {
-        setAddress({
-            ...address,
-            [e.target.name]: e.target.value,
-        });
+        const { name, value } = e.target;
+
+        setAddress((prevAddress) => ({
+            ...prevAddress,
+            [name]: value,
+        }));
+
+        validate(name, value);
     };
 
+    const handlePaymentMethodChange = (method) => {
+        setPaymentMethod(method);
+        if (method === "cod") {
+            setFinalAmount(total + 20);
+        } else {
+            setFinalAmount(total);
+        }
+    };
+    const dummyForCod = {
+        paymentId: null,
+        orderId: `cod-${Date.now()}`,
+        signature: null,
+    };
     const handlePayment = async () => {
-        if (typeof window.Razorpay === "undefined") {
-            alert("Razorpay SDK not loaded. Please try again later.");
+        if (!validateForm()) {
             return;
         }
-        try {
-            const orderData = await createOrder(total);
+        if (paymentMethod === "cod") {
+            alert("Order placed successfully with Cash on Delivery!");
+            saveOrderDetails(dummyForCod, cart, address);
+            // Handle order placement for Cash on Delivery here
+        } else if (paymentMethod === "razorpay") {
+            if (typeof window.Razorpay === "undefined") {
+                alert("Razorpay SDK not loaded. Please try again later.");
+                return;
+            }
+            try {
+                const orderData = await createOrder(total);
 
-            const options = {
-                key: "rzp_live_xalPljigHfSf1p",
-                amount: orderData.amount,
-                currency: orderData.currency,
-                name: "Your Company Name",
-                description: "Test Transaction",
-                order_id: orderData.id,
-                handler: function (response) {
-                    alert("Payment Successful");
-                    console.log(response);
-                    saveOrderDetails(response, cart, address);
-                },
-                prefill: {
-                    name: address.name,
-                    email: address.email,
-                    contact: address.phone,
-                },
-                notes: {
-                    address: address.addressLine,
-                    city: address.city,
-                    state: address.state,
-                    zip: address.zip,
-                },
-                theme: {
-                    color: "#F37254",
-                },
-            };
+                const options = {
+                    key: "rzp_live_xalPljigHfSf1p",
+                    amount: orderData.amount,
+                    currency: orderData.currency,
+                    name: "Sidha Khet Se",
+                    description: "Product purchase",
+                    order_id: orderData.id,
+                    handler: function (response) {
+                        alert("Payment Successful");
+                        console.log(response);
+                        saveOrderDetails(response, cart, address);
+                    },
+                    prefill: {
+                        name: address.name,
+                        email: address.email,
+                        contact: address.phone,
+                    },
+                    notes: {
+                        address: address.addressLine,
+                        city: address.city,
+                        state: address.state,
+                        zip: address.zip,
+                    },
+                    theme: {
+                        color: "#F37254",
+                    },
+                };
 
-            const rzp = new window.Razorpay(options);
-            rzp.open();
-        } catch (error) {
-            console.error("Error in payment:", error);
-            alert("Something went wrong!");
+                const rzp = new window.Razorpay(options);
+                rzp.open();
+            } catch (error) {
+                console.error("Error in payment:", error);
+                alert("Something went wrong!");
+            }
+        } else {
+            alert("Please select a payment method.");
         }
     };
 
@@ -74,9 +105,8 @@ const Payment = () => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                amount: amount * 100, // Amount in paise
+                amount: amount * 100,
                 currency: "INR",
-                // receipt: "receipt#1",
             }),
         });
         return response.json();
@@ -84,12 +114,12 @@ const Payment = () => {
 
     const saveOrderDetails = async (response, cart, address) => {
         const orderDetails = {
-            paymentId: response.razorpay_payment_id,
-            orderId: response.razorpay_order_id,
-            signature: response.razorpay_signature,
+            paymentId: response.razorpay_payment_id || response.paymentId,
+            orderId: response.razorpay_order_id || response.orderId,
+            signature: response.razorpay_signature || response.signature,
             cart,
             address,
-            total,
+            total: finalAmount,
         };
 
         const saveResponse = await fetch("http://localhost:5000/save-order", {
@@ -107,6 +137,78 @@ const Payment = () => {
         }
     };
 
+    const validate = (name, value) => {
+        let error = "";
+
+        switch (name) {
+            case "name":
+                if (!value) {
+                    error = "Name is required";
+                }
+                break;
+            case "email":
+                if (!value) {
+                    error = "Email is required";
+                } else if (!/\S+@\S+\.\S+/.test(value)) {
+                    error = "Email is invalid";
+                }
+                break;
+            case "phone":
+                if (!value) {
+                    error = "Phone number is required";
+                } else if (!/^\d{10}$/.test(value)) {
+                    error = "Phone number is invalid";
+                }
+                break;
+            case "addressLine":
+                if (!value) {
+                    error = "Address is required";
+                }
+                break;
+            case "city":
+                if (!value) {
+                    error = "City is required";
+                }
+                break;
+            case "state":
+                if (!value) {
+                    error = "State is required";
+                }
+                break;
+            case "zip":
+                if (!value) {
+                    error = "Zip code is required";
+                } else if (!/^\d{6}$/.test(value)) {
+                    error = "Zip code is invalid";
+                }
+                break;
+            default:
+                break;
+        }
+
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            [name]: error,
+        }));
+    };
+
+    const validateForm = () => {
+        let isValid = true;
+        const newErrors = {};
+
+        for (const key in address) {
+            if (address[key] === "") {
+                newErrors[key] = `${
+                    key.charAt(0).toUpperCase() + key.slice(1)
+                } is required`;
+                isValid = false;
+            }
+        }
+
+        setErrors(newErrors);
+        return isValid;
+    };
+
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4">Payment</h1>
@@ -121,6 +223,10 @@ const Payment = () => {
                         onChange={handleChange}
                         className="p-2 border"
                     />
+                    {errors.name && (
+                        <p className="text-red-500">{errors.name}</p>
+                    )}
+
                     <input
                         type="email"
                         name="email"
@@ -129,6 +235,10 @@ const Payment = () => {
                         onChange={handleChange}
                         className="p-2 border"
                     />
+                    {errors.email && (
+                        <p className="text-red-500">{errors.email}</p>
+                    )}
+
                     <input
                         type="text"
                         name="phone"
@@ -137,6 +247,10 @@ const Payment = () => {
                         onChange={handleChange}
                         className="p-2 border"
                     />
+                    {errors.phone && (
+                        <p className="text-red-500">{errors.phone}</p>
+                    )}
+
                     <input
                         type="text"
                         name="addressLine"
@@ -145,6 +259,10 @@ const Payment = () => {
                         onChange={handleChange}
                         className="p-2 border"
                     />
+                    {errors.addressLine && (
+                        <p className="text-red-500">{errors.addressLine}</p>
+                    )}
+
                     <input
                         type="text"
                         name="city"
@@ -153,6 +271,10 @@ const Payment = () => {
                         onChange={handleChange}
                         className="p-2 border"
                     />
+                    {errors.city && (
+                        <p className="text-red-500">{errors.city}</p>
+                    )}
+
                     <input
                         type="text"
                         name="state"
@@ -161,14 +283,19 @@ const Payment = () => {
                         onChange={handleChange}
                         className="p-2 border"
                     />
+                    {errors.state && (
+                        <p className="text-red-500">{errors.state}</p>
+                    )}
+
                     <input
                         type="text"
                         name="zip"
-                        placeholder="Zip Code"
+                        placeholder="PIN Code"
                         value={address.zip}
                         onChange={handleChange}
                         className="p-2 border"
                     />
+                    {errors.zip && <p className="text-red-500">{errors.zip}</p>}
                 </div>
             </div>
             <div className="mb-4">
@@ -180,7 +307,7 @@ const Payment = () => {
                     >
                         <div className="flex items-center">
                             <img
-                                src={product.imageUrl}
+                                src={`http://localhost:5000/${product.image}`}
                                 alt={product.name}
                                 className="w-16 h-16 rounded"
                             />
@@ -200,13 +327,47 @@ const Payment = () => {
                 ))}
             </div>
             <div className="text-lg font-semibold mb-4">
-                Total: ₹{total.toFixed(2)}
+                Total: ₹{finalAmount.toFixed(2)}
+            </div>
+            <div className="mb-4">
+                <h2 className="text-lg font-semibold">Select Payment Method</h2>
+                <div>
+                    <label className="flex items-center mb-2">
+                        <input
+                            type="radio"
+                            name="paymentMethod"
+                            value="razorpay"
+                            checked={paymentMethod === "razorpay"}
+                            onChange={() =>
+                                handlePaymentMethodChange("razorpay")
+                            }
+                            className="mr-2"
+                        />
+                        Pay Now
+                    </label>
+                    {cart.reduce((total, item) => total + item.quantity, 0) >
+                    1 ? (
+                        <label className="flex items-center mb-2">
+                            <input
+                                type="radio"
+                                name="paymentMethod"
+                                value="cod"
+                                checked={paymentMethod === "cod"}
+                                onChange={() =>
+                                    handlePaymentMethodChange("cod")
+                                }
+                                className="mr-2"
+                            />
+                            Cash on Delivery (Additional ₹20)
+                        </label>
+                    ) : null}
+                </div>
             </div>
             <button
                 onClick={handlePayment}
                 className="bg-blue-500 text-white px-4 py-2 rounded"
             >
-                Pay Now
+                Continue
             </button>
         </div>
     );

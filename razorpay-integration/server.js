@@ -65,7 +65,6 @@ app.post("/create-order", async (req, res) => {
 
 app.post("/save-order", async (req, res) => {
     const orderDetails = req.body;
-
     // Save orderDetails to your database
     try {
         const order = new Order(orderDetails);
