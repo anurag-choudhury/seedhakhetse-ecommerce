@@ -80,7 +80,7 @@ const Cart = () => {
                     >
                         <div className="flex items-center">
                             <img
-                                src={`http://localhost:5000/${product.image}`}
+                                src={`https://api.sidhakhetse.store/${product.image}`}
                                 alt={product.name}
                                 className="w-16 h-16 rounded"
                             />

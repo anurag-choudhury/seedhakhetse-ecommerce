@@ -33,7 +33,7 @@ const Admin = () => {
         try {
             const token = localStorage.getItem("token");
             const response = await axios.post(
-                "http://localhost:5000/add-product",
+                "https://api.sidhakhetse.store/add-product",
                 formData,
                 {
                     headers: {
@@ -42,7 +42,6 @@ const Admin = () => {
                     },
                 }
             );
-            console.log(response);
             if (response.status === 201) {
                 alert("Product added successfully");
                 setProduct({

@@ -68,7 +68,6 @@ const Payment = () => {
                     order_id: orderData.id,
                     handler: function (response) {
                         alert("Payment Successful");
-                        console.log(response);
                         saveOrderDetails(response, cart, address);
                     },
                     prefill: {
@@ -99,16 +98,19 @@ const Payment = () => {
     };
 
     const createOrder = async (amount) => {
-        const response = await fetch("http://localhost:5000/create-order", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                amount: amount * 100,
-                currency: "INR",
-            }),
-        });
+        const response = await fetch(
+            "https://api.sidhakhetse.store/create-order",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    amount: amount * 100,
+                    currency: "INR",
+                }),
+            }
+        );
         return response.json();
     };
 
@@ -122,13 +124,16 @@ const Payment = () => {
             total: finalAmount,
         };
 
-        const saveResponse = await fetch("http://localhost:5000/save-order", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(orderDetails),
-        });
+        const saveResponse = await fetch(
+            "https://api.sidhakhetse.store/save-order",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(orderDetails),
+            }
+        );
 
         if (saveResponse.ok) {
             navigate("/order-success", { state: { orderDetails } });
@@ -307,7 +312,7 @@ const Payment = () => {
                     >
                         <div className="flex items-center">
                             <img
-                                src={`http://localhost:5000/${product.image}`}
+                                src={`https://api.sidhakhetse.store/${product.image}`}
                                 alt={product.name}
                                 className="w-16 h-16 rounded"
                             />

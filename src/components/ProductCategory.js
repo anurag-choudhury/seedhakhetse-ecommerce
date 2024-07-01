@@ -62,7 +62,7 @@ const ProductCategory = () => {
         const fetchProducts = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:5000/products"
+                    "https://api.sidhakhetse.store/products"
                 );
                 setProducts(response.data);
             } catch (error) {
@@ -78,7 +78,6 @@ const ProductCategory = () => {
         const updateCart = () => {
             calculateTotal();
             calculateTotalQuantity();
-            console.log("Cart updated");
         };
 
         // Call the update function
@@ -125,8 +124,6 @@ const ProductCategory = () => {
             cart.reduce((total, item) => total + item.price * item.quantity, 0)
         );
     };
-    console.log(totalqt);
-    console.log(showPopup);
     const calculateTotalQuantity = () => {
         setTotalqt(cart.reduce((total, item) => total + item.quantity, 0));
     };
@@ -148,6 +145,11 @@ const ProductCategory = () => {
             <h1 className="text-xl text-center font-bold mb-4 mt-2">
                 India's #1 Premium Flavoured Chai
             </h1>
+            <img
+                src="/assets/img/banner2.jpeg"
+                alt="flavoured chai banner"
+                className="m-auto md:h-72 rounded-md my-4"
+            />
             <div className="mb-4">
                 <input
                     type="text"
@@ -174,7 +176,7 @@ const ProductCategory = () => {
                     >
                         <div className="flex items-center ">
                             <img
-                                src={`http://localhost:5000/${product.image}`}
+                                src={`https://api.sidhakhetse.store/${product.image}`}
                                 alt={product.name}
                                 className="w-20 h20 rounded transition-transform duration-300 transform hover:scale-125 "
                             />
@@ -246,7 +248,7 @@ const ProductCategory = () => {
                         textAlign: "left",
                     }}
                 >
-                    CART
+                    VIEW CART
                 </div>
                 <div className="flex items-center">
                     <div className="bg-white text-green-500 px-4 py-2 rounded-full mr-4">
