@@ -240,9 +240,10 @@ const ProductCategory = () => {
                     <path d="M28.93,29.21H12.27a3.89,3.89,0,1,1,0-7.78h2.65a1.25,1.25,0,1,1,0,2.5H12.27a1.39,1.39,0,1,0,0,2.78H28.93a1.25,1.25,0,0,1,0,2.5Z"></path>
                 </svg>
                 <div
+                    className="text-3xl md:text-4xl"
                     style={{
                         fontFamily: "Inter, sans-serif",
-                        fontSize: "36px",
+                        // fontSize: "36px",
                         fontWeight: 600,
                         lineHeight: "43.57px",
                         textAlign: "left",
