@@ -229,6 +229,7 @@ const ProductCategory = () => {
                 onClick={totalqt > 0 ? viewCart : null}
             >
                 <svg
+                    className="-mr-10 md:mr-0"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 35 35"
                     id="cart"
@@ -239,17 +240,22 @@ const ProductCategory = () => {
                     <path d="M9.46 14a1.25 1.25 0 0 1-1.21-1L6.46 5.23A3.21 3.21 0 0 0 3.32 2.75H1.69a1.25 1.25 0 0 1 0-2.5H3.32A5.71 5.71 0 0 1 8.9 4.66l1.78 7.77a1.24 1.24 0 0 1-.93 1.5A1.43 1.43 0 0 1 9.46 14zM15.11 34.75a4 4 0 1 1 4-4A4 4 0 0 1 15.11 34.75zm0-5.54a1.52 1.52 0 1 0 1.52 1.52A1.52 1.52 0 0 0 15.11 29.21zM28.93 34.75a4 4 0 1 1 4-4A4 4 0 0 1 28.93 34.75zm0-5.54a1.52 1.52 0 1 0 1.53 1.52A1.52 1.52 0 0 0 28.93 29.21z"></path>
                     <path d="M28.93,29.21H12.27a3.89,3.89,0,1,1,0-7.78h2.65a1.25,1.25,0,1,1,0,2.5H12.27a1.39,1.39,0,1,0,0,2.78H28.93a1.25,1.25,0,0,1,0,2.5Z"></path>
                 </svg>
-                <div
-                    className="text-3xl md:text-4xl"
-                    style={{
-                        fontFamily: "Inter, sans-serif",
-                        // fontSize: "36px",
-                        fontWeight: 600,
-                        lineHeight: "43.57px",
-                        textAlign: "left",
-                    }}
-                >
-                    VIEW CART
+                <div className="self-start">
+                    <div
+                        className="text-3xl md:text-4xl"
+                        style={{
+                            fontFamily: "Inter, sans-serif",
+                            // fontSize: "36px",
+                            fontWeight: 600,
+                            lineHeight: "43.57px",
+                            textAlign: "left",
+                        }}
+                    >
+                        CART
+                    </div>
+                    <p className="text-sm font-light">
+                        Free Delivery on Prepaid
+                    </p>
                 </div>
                 <div className="flex items-center">
                     <div className="bg-white text-green-500 px-4 py-2 rounded-full mr-4">
