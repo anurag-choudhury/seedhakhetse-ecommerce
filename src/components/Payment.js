@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const Payment = () => {
@@ -18,6 +18,13 @@ const Payment = () => {
     });
     const [paymentMethod, setPaymentMethod] = useState("");
     const [finalAmount, setFinalAmount] = useState(total);
+    console.log(errors);
+    useEffect(() => {
+        validateForm(); // Validate form on component mount or address change
+        for (const key in address) {
+            validate(key, address[key]);
+        }
+    }, [address]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -38,11 +45,13 @@ const Payment = () => {
             setFinalAmount(total);
         }
     };
+
     const dummyForCod = {
         paymentId: null,
         orderId: `cod-${Date.now()}`,
         signature: null,
     };
+
     const handlePayment = async () => {
         if (!validateForm()) {
             return;
@@ -50,7 +59,6 @@ const Payment = () => {
         if (paymentMethod === "cod") {
             alert("Order placed successfully with Cash on Delivery!");
             saveOrderDetails(dummyForCod, cart, address);
-            // Handle order placement for Cash on Delivery here
         } else if (paymentMethod === "razorpay") {
             if (typeof window.Razorpay === "undefined") {
                 alert("Razorpay SDK not loaded. Please try again later.");
@@ -207,11 +215,24 @@ const Payment = () => {
                     key.charAt(0).toUpperCase() + key.slice(1)
                 } is required`;
                 isValid = false;
+            } else {
+                validate(key, address[key]);
+                for (let key in errors) {
+                    if (errors[key] !== "") {
+                        isValid = false;
+                        break;
+                    }
+                }
             }
         }
 
-        setErrors(newErrors);
-        return isValid;
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            ...newErrors,
+        }));
+        return (
+            isValid && Object.values(newErrors).every((error) => error === "")
+        );
     };
 
     return (
@@ -317,22 +338,21 @@ const Payment = () => {
                                 className="w-16 h-16 rounded"
                             />
                             <div className="ml-4">
-                                <h2 className="text-lg font-semibold">
-                                    {product.name}
-                                </h2>
-                                <p className="text-green-600">
-                                    ₹{product.price}.00 x {product.quantity}
-                                </p>
+                                <h3 className="font-bold">{product.name}</h3>
+                                <p>Price: ₹{product.price}</p>
                             </div>
                         </div>
-                        <div className="text-lg font-semibold">
-                            ₹{(product.price * product.quantity).toFixed(2)}
+                        <div>
+                            <p>Quantity: {product.quantity}</p>
+                            <p>Subtotal: ₹{product.price * product.quantity}</p>
                         </div>
                     </div>
                 ))}
-            </div>
-            <div className="text-lg font-semibold mb-4">
-                Total: ₹{finalAmount.toFixed(2)}
+                <div className="flex justify-end p-4">
+                    <h2 className="text-xl font-bold">
+                        Total Amount: ₹{total}
+                    </h2>
+                </div>
             </div>
             <div className="mb-4">
                 <h2 className="text-lg font-semibold">Select Payment Method</h2>
