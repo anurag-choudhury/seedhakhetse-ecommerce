@@ -1,7 +1,6 @@
 ---
 deployment:
     tasks:
-        - export DEPLOYPATH=/home/sidhzydj/sidhakhetse_backend
-        - /bin/cp -R * $DEPLOYPATH
-        - cd $DEPLOYPATH
-        - npm install
+        - export DEPLOYPATH=/home/sidhzydj/public_html/
+        # - /bin/rm -rf $DEPLOYPATH/*
+        - /bin/cp -R build/* $DEPLOYPATH
