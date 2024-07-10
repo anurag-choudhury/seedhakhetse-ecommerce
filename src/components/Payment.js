@@ -350,7 +350,7 @@ const Payment = () => {
                 ))}
                 <div className="flex justify-end p-4">
                     <h2 className="text-xl font-bold">
-                        Total Amount: ₹{total}
+                        Total Amount: ₹{finalAmount}
                     </h2>
                 </div>
             </div>
