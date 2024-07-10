@@ -131,7 +131,7 @@ const Payment = () => {
             address,
             total: finalAmount,
         };
-
+        console.log(orderDetails);
         const saveResponse = await fetch(
             "https://api.sidhakhetse.store/save-order",
             {
