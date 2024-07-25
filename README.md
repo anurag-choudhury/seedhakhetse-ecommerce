@@ -1,70 +1,91 @@
-# Getting Started with Create React App
+# Seedhakhet
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**Seedhakhet** is a fully functional e-commerce application designed specifically for mobile devices. It focuses on selling tea leaves (chai patti) and offers a seamless shopping experience for users looking to purchase premium tea products.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **Mobile-Optimized**: The application is designed to be fully responsive and user-friendly on mobile devices.
+- **Product Catalog**: Browse a variety of tea leaves with detailed descriptions and images.
+- **Shopping Cart**: Add products to the cart, view cart details, and proceed to checkout.
+- **Order Management**: Manage orders with cash on delivery (COD) or online payment options.
+- **User Authentication**: Secure login and registration for users.
+- **Order Confirmation**: Receive an email confirmation upon successful order placement.
 
-### `npm start`
+## Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Frontend**: React.js
+- **Backend**: Node.js with Express
+- **Database**: MongoDB
+- **Payment Gateway**: Razorpay for online payments
+- **Email Service**: cPanel email for order confirmations
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Getting Started
 
-### `npm test`
+To get a local copy up and running, follow these steps:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Prerequisites
 
-### `npm run build`
+- [Node.js](https://nodejs.org/) (v14 or later)
+- [MongoDB](https://www.mongodb.com/) (For local development)
+- [Razorpay Account](https://razorpay.com/) (For payment integration)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Installation
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. **Clone the repository**
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+    ```bash
+    git clone https://github.com/yourusername/sidhakhet.git
+    ```
 
-### `npm run eject`
+2. **Navigate to the project directory**
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+    ```bash
+    cd sidhakhet
+    ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+4. **Install frontend dependencies**
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+    ```bash
+    npm install
+    ```
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+5. **Start the development server**
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+    For the backend:
 
-### Code Splitting
+    find my other repo for backend clone that then   ``` node server.js```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-### Analyzing the Bundle Size
+    ```bash
+    npm start
+    ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Usage
 
-### Making a Progressive Web App
+1. **Navigate to `http://localhost:3000`** to view the application.
+2. **Browse products** and **add them to your cart**.
+3. **Proceed to checkout**, fill in your shipping details, and select a payment method.
+4. **Complete your order** and receive a confirmation email.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Contributing
 
-### Advanced Configuration
+Contributions are welcome! Please fork the repository and submit a pull request with your changes.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/YourFeature`)
+3. Commit your changes (`git commit -am 'Add new feature'`)
+4. Push to the branch (`git push origin feature/YourFeature`)
+5. Create a new Pull Request
 
-### Deployment
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Distributed under the MIT License. See `LICENSE` for more information.
 
-### `npm run build` fails to minify
+## Contact
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+For any inquiries or issues, please contact:
+
+- **Anurag Choudhury**: [your.email@example.com](mailto:idanurag567@gmail.com)
+
