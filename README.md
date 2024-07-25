@@ -44,18 +44,20 @@ To get a local copy up and running, follow these steps:
     ```
 
 
-4. **Install frontend dependencies**
+3. **Install frontend dependencies**
 
     ```bash
     npm install
     ```
 
 
-5. **Start the development server**
+4. **Start the development server**
 
+    Also change the live backend url directly form the code to get back to localhost instead of the cloud hosting of backend
+    
     For the backend:
 
-    find my other repo for backend clone that then   ``` node server.js```
+    find my other repo for backend (sidhakhetse-backend) clone that then   ``` node server.js```
 
 
     ```bash
