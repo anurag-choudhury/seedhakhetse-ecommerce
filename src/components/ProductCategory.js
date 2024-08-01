@@ -251,7 +251,7 @@ const ProductCategory = () => {
                             textAlign: "left",
                         }}
                     >
-                        CART
+                        VIEW CART
                     </div>
                     <p className="text-sm font-light">
                         Free Delivery on Prepaid
