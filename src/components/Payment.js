@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-
+let rzp;
 const Payment = () => {
+
     const location = useLocation();
     const navigate = useNavigate();
     const cart = location.state.cart;
@@ -40,7 +41,7 @@ const Payment = () => {
     const handlePaymentMethodChange = (method) => {
         setPaymentMethod(method);
         if (method === "cod") {
-            setFinalAmount(total + 20);
+            setFinalAmount(total + 49);
         } else {
             setFinalAmount(total);
         }
@@ -94,8 +95,10 @@ const Payment = () => {
                     },
                 };
 
-                const rzp = new window.Razorpay(options);
-                rzp.open();
+                if (!rzp) {
+                    rzp = new window.Razorpay(options);
+                    rzp.open();
+                }
             } catch (error) {
                 console.error("Error in payment:", error);
                 alert("Something went wrong!");
@@ -211,9 +214,8 @@ const Payment = () => {
 
         for (const key in address) {
             if (address[key] === "") {
-                newErrors[key] = `${
-                    key.charAt(0).toUpperCase() + key.slice(1)
-                } is required`;
+                newErrors[key] = `${key.charAt(0).toUpperCase() + key.slice(1)
+                    } is required`;
                 isValid = false;
             } else {
                 validate(key, address[key]);
@@ -371,7 +373,7 @@ const Payment = () => {
                         Pay Now
                     </label>
                     {cart.reduce((total, item) => total + item.quantity, 0) >
-                    1 ? (
+                        1 ? (
                         <label className="flex items-center mb-2">
                             <input
                                 type="radio"
@@ -383,7 +385,7 @@ const Payment = () => {
                                 }
                                 className="mr-2"
                             />
-                            Cash on Delivery (Additional ₹20)
+                            Cash on Delivery (Additional ₹49)
                         </label>
                     ) : null}
                 </div>
